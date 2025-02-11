@@ -1,99 +1,163 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+NestJSプロジェクトをESModuleとして初期設定する手順をまとめましょう。これまでの作業で得られた知見を基に、必要な設定をステップバイステップで説明します。
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Task Completed
+NestJSプロジェクトをESModuleとして設定する手順：
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+プロジェクトの作成
 
 ```bash
-$ npm install
+nest new project-name
 ```
 
-## Compile and run the project
+package.jsonの設定
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```json
+"type": "module"
 ```
 
-## Run tests
+Jest設定を以下のように変更：
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```json
+"jest": {
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": "src",
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": ["ts-jest", {
+      "useESM": true
+    }]
+  },
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@nestjs|react-is)/)"
+  ],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
+  ],
+  "coverageDirectory": "../coverage",
+  "testEnvironment": "node"
+}
 ```
 
-## Deployment
+tsconfig.jsonの設定
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+```json
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+ソースファイルの拡張子
+インポート時に.js拡張子を付ける必要がある場合は、すべてのインポート文に.jsを追加（これほんと重要）
 
-## Resources
+src/app.controller.ts
 
-Check out a few resources that may come in handy when working with NestJS:
+src/app.controller.spec.ts
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+src/app.module.ts
 
-## Support
+src/app.service.ts
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+src/main.ts
 
-## Stay in touch
+test/app.e2e-spec.ts
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+test/jest-e2e.json
 
-## License
+ESLint設定（eslint.config.mjs）
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```js
+import js from '@eslint/js';
+import globals from 'globals';
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {},
+  },
+];
+```
+
+これらの設定により：
+
+ESModuleとしてプロジェクトが動作
+テストが正常に実行可能
+TypeScriptとESMの互換性が確保
+適切なモジュール解決が可能
+注意点：
+
+Node.js v14.8.0以上が必要
+依存パッケージによってはCommonJSとの互換性の問題が発生する可能性があるため、transformIgnorePatternsで適切に対応する
+TypeScriptのmodule設定をESNextにすることで、最新のESM機能を使用可能
+
+動作確認
+
+```pwsh
+PS C:\Users\kazum\portfolio\nest\esmodule-test> npm run test
+
+> esmodule-test@0.0.1 test
+> jest
+
+ PASS  src/app.controller.spec.ts
+  AppController
+    root
+      √ should return "Hello World!" (21 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        4.073 s, estimated 5 s
+Ran all test suites.
+PS C:\Users\kazum\portfolio\nest\esmodule-test>
+```
+
+```pwsh
+npm run start:dev
+
+[16:41:25] Starting compilation in watch mode...
+
+[16:41:28] Found 0 errors. Watching for file changes.
+
+[Nest] 95300  - 2025/02/11 16:41:29     LOG [NestFactory] Starting Nest application...
+[Nest] 95300  - 2025/02/11 16:41:29     LOG [InstanceLoader] AppModule dependencies initialized +28ms
+[Nest] 95300  - 2025/02/11 16:41:29     LOG [RoutesResolver] AppController {/}: +6ms
+[Nest] 95300  - 2025/02/11 16:41:29     LOG [RouterExplorer] Mapped {/, GET} route +5ms
+[Nest] 95300  - 2025/02/11 16:41:29     LOG [NestApplication] Nest application successfully started +5ms
+```
+
+```pwsh
+PS C:\Users\kazum\portfolio\nest\esmodule-test> Invoke-RestMethod -Method Get -Uri "http://localhost:3000"
+Hello World!
+```
