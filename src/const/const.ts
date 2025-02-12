@@ -14,7 +14,7 @@ export const BobPublicKey =
 export const BobAddress = 'TCSMJNJTRI76YPGQFDEZBFL3XTM4L3AWELOGBDY';
 export const facade = new SymbolFacade('testnet');
 
-export const NODE = 'https://test02.xymnodes.com:3001';
+export const NODE = 'http://sym-test-03.opening-line.jp:3000/';
 
 export const aliceKeyPairRecoveredFromPrivateKeyString = new KeyPair(
   new PrivateKey(AlicePrivateKey),

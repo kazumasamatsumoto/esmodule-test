@@ -47,4 +47,9 @@ export class SymbolTransactionController {
   remove(@Param('id') id: string) {
     return this.symbolTransactionService.remove(+id);
   }
+
+  @Post('create-transaction')
+  createTransaction() {
+    return this.symbolTransactionService.createTransaction();
+  }
 }
